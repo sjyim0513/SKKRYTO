@@ -7,11 +7,13 @@ async function main() {
   console.log("복원된 지갑 주소: ", wallet.address);
 
   const contractfactory = await ethers.getContractFactory(
-    "testContract",
+    "testContract_0408",
     wallet
   );
 
-  const contract = await contractfactory.deploy(10);
+  const contract = await contractfactory.deploy(
+    "0xf69A21Bdb87c851FA9c2B1C8A48289151ca2cAda"
+  );
 
   console.log("컨트랙트 배포 완료: ", contract.target);
 }
