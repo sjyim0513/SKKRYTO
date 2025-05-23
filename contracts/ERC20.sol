@@ -9,8 +9,8 @@ contract ERC20 is IERC20 {
     uint8 private _decimals = 18;
 
     uint256 private _totalSupply;
-    mapping(address => uint) public _balances;
-    mapping(address => mapping(address => uint)) public _allowances;
+    mapping(address => uint256) public _balances;
+    mapping(address => mapping(address => uint256)) public _allowances;
 
     constructor(string memory name_, string memory symbol_) {
         _name = name_;
