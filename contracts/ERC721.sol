@@ -13,13 +13,18 @@ interface IERC721 {
     function getApproved(uint256 tokenId) external view returns (address operator);
 
     function safeTransferFrom(address from, address to, uint256 tokenId) external;
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory data) external;
     function transferFrom(address from, address to, uint256 tokenId) external;
 
     function setApprovalForAll(address operator, bool _approved) external;
     function isApprovedForAll(address owner, address operator) external view returns (bool);
 }
 
-interface IERC721Receiver {
+interface ERC165 {
+    function supportsInterface(bytes4 interfaceID) external view returns (bool);
+}
+
+interface ERC721TokenReceiver {
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }
 
@@ -51,7 +56,7 @@ contract testERC721 is IERC721 {
     function approve(address to, uint256 tokenId) public override {
         address owner = ownerOf(tokenId);
         //권한을 주는 사람과 받는 사람이 같으면 안 됨 || 이미 모든 토큰 사용을 허락 받았으면 패스
-        require(to == owner || isApprovedForAll(owner, msg.sender), "Not authorized");
+        require(to != owner || msg.sender == owner || !isApprovedForAll(owner, msg.sender), "Not authorized");
         _tokenApprovals[tokenId] = to;
         emit Approval(owner, to, tokenId);
     }
@@ -128,10 +133,10 @@ contract testERC721 is IERC721 {
             return true;
         }
         //CA인 경우 IERC721Receiver 인터페이스 호출 시도
-        try IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, data) returns (bytes4 retval) {
+        try ERC721TokenReceiver(to).onERC721Received(msg.sender, from, tokenId, data) returns (bytes4 retval) {
             //호출에 성공하면 반환된 retval(4바이트 함수 식별자)이 
             //IERC721Receiver.onERC721Received.selector랑 일치하는지 검사
-            return retval == IERC721Receiver.onERC721Received.selector;
+            return retval == ERC721TokenReceiver.onERC721Received.selector;
         } catch {
             return false;
         }
