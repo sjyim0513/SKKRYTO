@@ -6,9 +6,12 @@ async function main() {
   const wallet = new ethers.Wallet(PK, ethers.provider);
   console.log("복원된 지갑 주소: ", wallet.address);
 
-  const contractfactory = await ethers.getContractFactory("ojNFT", wallet);
+  const contractfactory = await ethers.getContractFactory(
+    "createToken1155",
+    wallet
+  );
 
-  const contract = await contractfactory.deploy("OJ nft", "OJNFT", 10);
+  const contract = await contractfactory.deploy(199, 1);
 
   console.log("컨트랙트 배포 완료: ", contract.target);
 }

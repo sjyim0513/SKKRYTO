@@ -1,4 +1,10 @@
+// Sources flattened with hardhat v2.22.19 https://hardhat.org
+
 // SPDX-License-Identifier: MIT
+
+// File contracts/ERC1155.sol
+
+// Original license: SPDX_License_Identifier: MIT
 pragma solidity ^0.8.20;
 
 /// @dev ERC-1155 수신 인터페이스
@@ -200,5 +206,18 @@ contract ERC1155 is IERC1155 {
             _balances[id][from] = fromBal - amount;
         }
         emit TransferBatch(msg.sender, from, address(0), ids, amounts);
+    }
+}
+
+
+// File contracts/createToken1155.sol
+
+// Original license: SPDX_License_Identifier: MIT
+pragma solidity ^0.8.20;
+contract createToken1155 is ERC1155 {
+
+  constructor(uint256 id, uint256 amount)
+    {
+        _mint(msg.sender, id, amount, "");
     }
 }
